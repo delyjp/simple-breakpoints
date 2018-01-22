@@ -98,7 +98,7 @@ var _class = function () {
     }, {
         key: 'isBetween',
         value: function isBetween(smallBreakpoint, largeBreakpoint) {
-            return this.viewport.width >= this.breakpoints[smallBreakpoint] && this.viewport.width <= this.breakpoints[largeBreakpoint];
+            return this.isGreaterThanEqualTo(smallBreakpoint) && this.isLessThan(largeBreakpoint);
         }
     }, {
         key: 'isLessThan',
@@ -123,22 +123,22 @@ var _class = function () {
     }, {
         key: 'isMobile',
         value: function isMobile() {
-            return this.isLessThanEqualTo('mobile');
+            return this.isLessThan('mobile');
         }
     }, {
         key: 'isTablet',
         value: function isTablet() {
-            return this.isBetween('mobile', 'small_desktop');
+            return this.isBetween('mobile', 'tablet');
         }
     }, {
         key: 'isSmallDesktop',
         value: function isSmallDesktop() {
-            return this.isBetween('small_desktop', 'large_desktop');
+            return this.isBetween('tablet', 'small_desktop');
         }
     }, {
         key: 'isLargeDesktop',
         value: function isLargeDesktop() {
-            return this.viewport.width >= this.breakpoints.large_desktop;
+            return this.isGreaterThanEqualTo('small_desktop');
         }
     }]);
 

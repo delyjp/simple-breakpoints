@@ -73,7 +73,7 @@ export default class {
     }
 
     isBetween (smallBreakpoint, largeBreakpoint) {
-        return this.viewport.width >= this.breakpoints[smallBreakpoint] && this.viewport.width <= this.breakpoints[largeBreakpoint];
+        return this.isGreaterThanEqualTo(smallBreakpoint) && this.isLessThan(largeBreakpoint);
     }
 
     isLessThan (breakpoint) {
@@ -93,19 +93,19 @@ export default class {
     }
 
     isMobile () {
-        return this.isLessThanEqualTo('mobile');
+        return this.isLessThan('mobile');
     }
 
     isTablet () {
-        return this.isBetween('mobile', 'small_desktop');
+        return this.isBetween('mobile', 'tablet');
     }
 
     isSmallDesktop () {
-        return this.isBetween('small_desktop', 'large_desktop');
+        return this.isBetween('tablet', 'small_desktop');
     }
 
     isLargeDesktop () {
-        return this.viewport.width >= this.breakpoints.large_desktop;
+        return this.isGreaterThanEqualTo('small_desktop');
     }
 
 };
