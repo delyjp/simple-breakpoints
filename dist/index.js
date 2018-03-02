@@ -18,7 +18,7 @@ var _class = function () {
     function _class() {
         var _this = this;
 
-        var breakpoints = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { mobile: 480, tablet: 640, small_desktop: 1024, large_desktop: 1180 };
+        var breakpoints = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { mobile: 480, tablet: 640, small_desktop: 1024, large_desktop: 1180, x_large_desktop: 1600 };
 
         _classCallCheck(this, _class);
 
@@ -79,6 +79,10 @@ var _class = function () {
     }, {
         key: 'currentBreakpoint',
         value: function currentBreakpoint() {
+            if (this.isGreaterThan('large_desktop')) {
+                return 'x_large_desktop';
+            }
+
             if (this.isMobile()) {
                 return 'mobile';
             }
