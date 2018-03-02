@@ -1,7 +1,7 @@
 import Dispatcher from './Dispatcher';
 
 export default class {
-    constructor(breakpoints = { mobile: 480, tablet: 640, small_desktop: 1024, large_desktop: 1180 }) {
+    constructor(breakpoints = { mobile: 480, tablet: 640, small_desktop: 1024, large_desktop: 1180, x_large_desktop: 1600 }) {
         this.breakpoints    = breakpoints;
         this.getViewportSize();
 
@@ -55,6 +55,10 @@ export default class {
 	}
 
     currentBreakpoint () {
+        if(this.isGreaterThan('large_desktop')) {
+            return 'x_large_desktop';
+        }
+
         if(this.isMobile()) {
             return 'mobile';
         }
