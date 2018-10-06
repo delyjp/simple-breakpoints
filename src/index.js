@@ -1,34 +1,54 @@
 import Dispatcher from './Dispatcher';
 
+const defaultOptions = {
+  dom: true,
+};
+
 export default class {
-    constructor(breakpoints = { mobile: 480, tablet: 640, small_desktop: 1024, large_desktop: 1180, x_large_desktop: 1600 }) {
+    constructor(
+      breakpoints = {
+        mobile: 480,
+        tablet: 640,
+        small_desktop: 1024,
+        large_desktop: 1180,
+        x_large_desktop: 1600
+      },
+      options = {},
+    ) {
         this.breakpoints    = breakpoints;
         this.getViewportSize();
 
         this.viewport       = this.getViewportSize();
         this.lastBreakpoint = this.currentBreakpoint();
+        this.options = Object.assign(
+          {},
+          defaultOptions,
+          options,
+        );
 
-        window.addEventListener('resize', () => {
-            this.viewport = this.getViewportSize();
+        if (this.options.dom) {
+          window.addEventListener('resize', () => {
+              this.viewport = this.getViewportSize();
 
-            let currentBreakpoint = this.currentBreakpoint(),
-                direction;
+              let currentBreakpoint = this.currentBreakpoint(),
+                  direction;
 
-            if(currentBreakpoint !== this.lastBreakpoint) {
-                Dispatcher.fire('breakpointChange', this.lastBreakpoint, currentBreakpoint);
+              if(currentBreakpoint !== this.lastBreakpoint) {
+                  Dispatcher.fire('breakpointChange', this.lastBreakpoint, currentBreakpoint);
 
-                if(this.breakpoints[this.lastBreakpoint] > this.breakpoints[currentBreakpoint]) {
-                    direction = 'Down';
-                } else {
-                    direction = 'Up';
-                }
+                  if(this.breakpoints[this.lastBreakpoint] > this.breakpoints[currentBreakpoint]) {
+                      direction = 'Down';
+                  } else {
+                      direction = 'Up';
+                  }
 
-                Dispatcher.fire(`breakpointChange${direction}`, this.lastBreakpoint, currentBreakpoint);
+                  Dispatcher.fire(`breakpointChange${direction}`, this.lastBreakpoint, currentBreakpoint);
 
-                this.lastBreakpoint = currentBreakpoint;
-            }
+                  this.lastBreakpoint = currentBreakpoint;
+              }
 
-        });
+          });
+        }
     }
 
     on (event, callback) {
@@ -40,19 +60,25 @@ export default class {
     }
 
     getViewportSize () {
-		let win = window,
-			obj = 'inner';
-
-		if (!('innerWidth' in window)) {
-			obj = 'client';
-			win = document.documentElement || document.body;
-		}
-
+      if (!this.options.dom) {
         return {
-            width: win[obj + 'Width'],
-            height: win[obj + 'Height']
+          width: 0,
+          height: 0,
         };
-	}
+      }
+      let win = window,
+        obj = 'inner';
+
+      if (!('innerWidth' in window)) {
+        obj = 'client';
+        win = document.documentElement || document.body;
+      }
+
+      return {
+          width: win[obj + 'Width'],
+          height: win[obj + 'Height']
+      };
+    }
 
     currentBreakpoint () {
         if(this.isGreaterThan('large_desktop')) {
