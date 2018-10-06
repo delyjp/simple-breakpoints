@@ -15,17 +15,17 @@ export default class {
       },
       options = {},
     ) {
-        this.breakpoints    = breakpoints;
-        this.getViewportSize();
-
-        this.viewport       = this.getViewportSize();
-        this.lastBreakpoint = this.currentBreakpoint();
         this.options = Object.assign(
           {},
           defaultOptions,
           options,
         );
 
+        this.breakpoints    = breakpoints;
+        this.getViewportSize();
+
+        this.viewport       = this.getViewportSize();
+        this.lastBreakpoint = this.currentBreakpoint();
         if (this.options.dom) {
           window.addEventListener('resize', () => {
               this.viewport = this.getViewportSize();
