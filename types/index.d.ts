@@ -17,9 +17,9 @@ export class SimpleBreakpoints {
     dom?: boolean,
   });
 
-  on(event: string, callback: AnyFunction): void;
+  on(event: string, callback: (...args: any[]) => any): void;
 
-  off(event: string): void;
+  off(event: string, fn: (...args: any[]) => any): void;
 
   getViewportSize(): ViewportSize;
 

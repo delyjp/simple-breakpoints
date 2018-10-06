@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Dispatcher = require('./Dispatcher');
+var _eventemitter = require('eventemitter3');
 
-var _Dispatcher2 = _interopRequireDefault(_Dispatcher);
+var _eventemitter2 = _interopRequireDefault(_eventemitter);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -35,6 +35,8 @@ var _class = function () {
 
         this.options = Object.assign({}, defaultOptions, options);
 
+        this.eventEmitter = new _eventemitter2.default();
+
         this.breakpoints = breakpoints;
         this.getViewportSize();
 
@@ -48,7 +50,7 @@ var _class = function () {
                     direction = void 0;
 
                 if (currentBreakpoint !== _this.lastBreakpoint) {
-                    _Dispatcher2.default.fire('breakpointChange', _this.lastBreakpoint, currentBreakpoint);
+                    _this.eventEmitter.emit('breakpointChange', _this.lastBreakpoint, currentBreakpoint);
 
                     if (_this.breakpoints[_this.lastBreakpoint] > _this.breakpoints[currentBreakpoint]) {
                         direction = 'Down';
@@ -56,7 +58,7 @@ var _class = function () {
                         direction = 'Up';
                     }
 
-                    _Dispatcher2.default.fire('breakpointChange' + direction, _this.lastBreakpoint, currentBreakpoint);
+                    _this.eventEmitter.emit('breakpointChange' + direction, _this.lastBreakpoint, currentBreakpoint);
 
                     _this.lastBreakpoint = currentBreakpoint;
                 }
@@ -67,12 +69,12 @@ var _class = function () {
     _createClass(_class, [{
         key: 'on',
         value: function on(event, callback) {
-            _Dispatcher2.default.on(event, callback);
+            this.eventEmitter.on(event, callback);
         }
     }, {
         key: 'off',
-        value: function off(event) {
-            _Dispatcher2.default.off(event);
+        value: function off(event, fn) {
+            this.eventEmitter.off(event, fn);
         }
     }, {
         key: 'getViewportSize',

@@ -1,4 +1,4 @@
-import Dispatcher from './Dispatcher';
+import EventEmitter from 'eventemitter3';
 
 const defaultOptions = {
   dom: true,
@@ -21,6 +21,8 @@ export default class {
           options,
         );
 
+        this.eventEmitter = new EventEmitter();
+
         this.breakpoints    = breakpoints;
         this.getViewportSize();
 
@@ -34,7 +36,7 @@ export default class {
                   direction;
 
               if(currentBreakpoint !== this.lastBreakpoint) {
-                  Dispatcher.fire('breakpointChange', this.lastBreakpoint, currentBreakpoint);
+                  this.eventEmitter.emit('breakpointChange', this.lastBreakpoint, currentBreakpoint);
 
                   if(this.breakpoints[this.lastBreakpoint] > this.breakpoints[currentBreakpoint]) {
                       direction = 'Down';
@@ -42,7 +44,7 @@ export default class {
                       direction = 'Up';
                   }
 
-                  Dispatcher.fire(`breakpointChange${direction}`, this.lastBreakpoint, currentBreakpoint);
+                  this.eventEmitter.emit(`breakpointChange${direction}`, this.lastBreakpoint, currentBreakpoint);
 
                   this.lastBreakpoint = currentBreakpoint;
               }
@@ -52,11 +54,11 @@ export default class {
     }
 
     on (event, callback) {
-        Dispatcher.on(event, callback);
+        this.eventEmitter.on(event, callback);
     }
 
-    off (event) {
-        Dispatcher.off(event);
+    off (event, fn) {
+        this.eventEmitter.off(event, fn);
     }
 
     getViewportSize () {
