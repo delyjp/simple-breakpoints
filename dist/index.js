@@ -33,13 +33,13 @@ var _class = function () {
 
         _classCallCheck(this, _class);
 
+        this.options = Object.assign({}, defaultOptions, options);
+
         this.breakpoints = breakpoints;
         this.getViewportSize();
 
         this.viewport = this.getViewportSize();
         this.lastBreakpoint = this.currentBreakpoint();
-        this.options = Object.assign({}, defaultOptions, options);
-
         if (this.options.dom) {
             window.addEventListener('resize', function () {
                 _this.viewport = _this.getViewportSize();
