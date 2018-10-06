@@ -14,11 +14,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var defaultOptions = {
+    dom: true
+};
+
 var _class = function () {
     function _class() {
         var _this = this;
 
-        var breakpoints = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { mobile: 480, tablet: 640, small_desktop: 1024, large_desktop: 1180, x_large_desktop: 1600 };
+        var breakpoints = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
+            mobile: 480,
+            tablet: 640,
+            small_desktop: 1024,
+            large_desktop: 1180,
+            x_large_desktop: 1600
+        };
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
         _classCallCheck(this, _class);
 
@@ -27,27 +38,30 @@ var _class = function () {
 
         this.viewport = this.getViewportSize();
         this.lastBreakpoint = this.currentBreakpoint();
+        this.options = Object.assign({}, defaultOptions, options);
 
-        window.addEventListener('resize', function () {
-            _this.viewport = _this.getViewportSize();
+        if (this.options.dom) {
+            window.addEventListener('resize', function () {
+                _this.viewport = _this.getViewportSize();
 
-            var currentBreakpoint = _this.currentBreakpoint(),
-                direction = void 0;
+                var currentBreakpoint = _this.currentBreakpoint(),
+                    direction = void 0;
 
-            if (currentBreakpoint !== _this.lastBreakpoint) {
-                _Dispatcher2.default.fire('breakpointChange', _this.lastBreakpoint, currentBreakpoint);
+                if (currentBreakpoint !== _this.lastBreakpoint) {
+                    _Dispatcher2.default.fire('breakpointChange', _this.lastBreakpoint, currentBreakpoint);
 
-                if (_this.breakpoints[_this.lastBreakpoint] > _this.breakpoints[currentBreakpoint]) {
-                    direction = 'Down';
-                } else {
-                    direction = 'Up';
+                    if (_this.breakpoints[_this.lastBreakpoint] > _this.breakpoints[currentBreakpoint]) {
+                        direction = 'Down';
+                    } else {
+                        direction = 'Up';
+                    }
+
+                    _Dispatcher2.default.fire('breakpointChange' + direction, _this.lastBreakpoint, currentBreakpoint);
+
+                    _this.lastBreakpoint = currentBreakpoint;
                 }
-
-                _Dispatcher2.default.fire('breakpointChange' + direction, _this.lastBreakpoint, currentBreakpoint);
-
-                _this.lastBreakpoint = currentBreakpoint;
-            }
-        });
+            });
+        }
     }
 
     _createClass(_class, [{
@@ -63,6 +77,12 @@ var _class = function () {
     }, {
         key: 'getViewportSize',
         value: function getViewportSize() {
+            if (!this.options.dom) {
+                return {
+                    width: 0,
+                    height: 0
+                };
+            }
             var win = window,
                 obj = 'inner';
 
