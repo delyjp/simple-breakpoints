@@ -8,15 +8,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _eventemitter = require('eventemitter3');
 
-var _eventemitter2 = _interopRequireDefault(_eventemitter);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var defaultOptions = {
     dom: true
 };
+
+var eventEmitter = new _eventemitter.EventEmitter();
 
 var _class = function () {
     function _class() {
@@ -35,8 +33,6 @@ var _class = function () {
 
         this.options = Object.assign({}, defaultOptions, options);
 
-        this.eventEmitter = new _eventemitter2.default();
-
         this.breakpoints = breakpoints;
         this.getViewportSize();
 
@@ -50,7 +46,7 @@ var _class = function () {
                     direction = void 0;
 
                 if (currentBreakpoint !== _this.lastBreakpoint) {
-                    _this.eventEmitter.emit('breakpointChange', _this.lastBreakpoint, currentBreakpoint);
+                    eventEmitter.emit('breakpointChange', _this.lastBreakpoint, currentBreakpoint);
 
                     if (_this.breakpoints[_this.lastBreakpoint] > _this.breakpoints[currentBreakpoint]) {
                         direction = 'Down';
@@ -58,7 +54,7 @@ var _class = function () {
                         direction = 'Up';
                     }
 
-                    _this.eventEmitter.emit('breakpointChange' + direction, _this.lastBreakpoint, currentBreakpoint);
+                    eventEmitter.emit('breakpointChange' + direction, _this.lastBreakpoint, currentBreakpoint);
 
                     _this.lastBreakpoint = currentBreakpoint;
                 }
@@ -69,12 +65,16 @@ var _class = function () {
     _createClass(_class, [{
         key: 'on',
         value: function on(event, callback) {
-            this.eventEmitter.on(event, callback);
+            eventEmitter.on(event, callback);
         }
     }, {
         key: 'off',
         value: function off(event, fn) {
-            this.eventEmitter.off(event, fn);
+            if (fn == null) {
+                eventEmitter.removeAllListeners(event);
+            } else {
+                eventEmitter.off(event, fn);
+            }
         }
     }, {
         key: 'getViewportSize',
